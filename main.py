@@ -64,7 +64,7 @@ class windowClass(wx.Frame):
 		facultyAddBtn = wx.Button(panel,-1,'Add Faculty')
 		self.Bind(wx.EVT_BUTTON,self.addFaculty,facultyAddBtn)
 		facultyEditBtn = wx.Button(panel,-1,'Edit Info')
-		self.Bind(wx.EVT_BUTTON,self.editFaculty,facultyEditBtn)
+		self.Bind(wx.EVT_BUTTON,self.viewFaculty,facultyEditBtn)
 
 
 		#Utility tool Buttons
@@ -127,10 +127,12 @@ class windowClass(wx.Frame):
 
 	def addFaculty(self,e):
 		print 'Adding new faculty'
-		Faculty = addFacultyClass(None,title="Add Faculty")
+		Faculty = addFacultyClass(None)
+		Faculty.basicGUI()
+		Faculty.add()
 		Faculty.ShowModal()
 		Faculty.Destroy()
-	def editFaculty(self,e):
+	def viewFaculty(self,e):
 		print 'Editing existing faculty'
 		Faculty = viewFacultyClass(None,title="Edit Faculty")
 		Faculty.ShowModal()
