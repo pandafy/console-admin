@@ -76,8 +76,6 @@ class addFacultyClass(wx.Dialog):
 		profile = self.CProfile.GetValue()
 		department = self.rbox.GetString(self.rbox.GetSelection())
 
-		print image + '\n' + department
-
 		appendFaculty(department,image,name,designation,qualification,specialization,email,profile)
 
 	def add(self):
@@ -93,6 +91,7 @@ class addFacultyClass(wx.Dialog):
 		self.FName = row["name"]
 		self.FDesign = row["designation"]
 		self.FDep = dep
+		self.id = row["id"]
 
 		self.CImage.SetValue(self.FImage)
 		self.CName.SetValue(self.FName)
@@ -109,7 +108,18 @@ class addFacultyClass(wx.Dialog):
 
 
 	def editFaculty(self,e):
-		print "write here edit code"
+		print "Editing faculty information \n Changes are : "
+
+		image = self.CImage.GetValue()
+		name = self.CName.GetValue()
+		designation = self.CDesignation.GetValue()
+		qualification = self.CQualification.GetValue()
+		specialization = self.CSpecialization.GetValue()
+		email = self.CEmail.GetValue()
+		profile = self.CProfile.GetValue()
+		department = self.rbox.GetString(self.rbox.GetSelection())
+		EditFaculty(self.id,department,image,name,designation,qualification,specialization,email,profile)
+		self.Destroy()
 
 	def setImage(self,imgPath):
 		img = wx.Image(imgPath, wx.BITMAP_TYPE_ANY)
@@ -219,28 +229,29 @@ class viewFacultyClass(wx.Dialog):
 		print "Opening edit window"
 		row = self.dataOLV1.GetSelectedObject()
 		editSel = addFacultyClass(None)
-		
 		editSel.basicGUI()
 		editSel.update(row,0)
 		editSel.ShowModal()
-		editSel.Destroy()
+		self.dataOLV1.SetObjects(readFile('faculty_cse'))
+		
 	
 	def editECE(self,e):
 		print "Opening edit window"
 		row = self.dataOLV2.GetSelectedObject()
-		editSel = editFacultyClass(None)
-		editSel.update(row,1)
+		editSel = addFacultyClass(None)
 		editSel.basicGUI()
+		editSel.update(row,0)
 		editSel.ShowModal()
-		editSel.Destroy()
+		self.dataOLV2.SetObjects(readFile('faculty_ece'))
 
 	def editMAE(self,e):
 		print "Opening edit window"
 		row = self.dataOLV3.GetSelectedObject()
 		editSel = addFacultyClass(None)
-#		editSel.update(row,2)
+		editSel.basicGUI()
+		editSel.update(row,0)
 		editSel.ShowModal()
-		editSel.Destroy()
+		self.dataOLV3.SetObjects(readFile('faculty_mae'))
 
 
 
