@@ -93,6 +93,7 @@ class addFacultyClass(wx.Dialog):
 		self.FDep = dep
 		self.id = row["id"]
 
+		self.SetTitle("Edit")
 		self.CImage.SetValue(self.FImage)
 		self.CName.SetValue(self.FName)
 		self.CDesignation.SetValue(self.FDesign)
@@ -103,7 +104,7 @@ class addFacultyClass(wx.Dialog):
 		self.rbox.SetSelection(self.FDep)
 		self.setImage(self.FImage)
 
-		self.FacultyBtn.SetLabel("Edit")
+		self.FacultyBtn.SetLabel("EDIT")
 		self.Bind(wx.EVT_BUTTON,self.editFaculty,self.FacultyBtn)
 
 
@@ -119,7 +120,7 @@ class addFacultyClass(wx.Dialog):
 		profile = self.CProfile.GetValue()
 		department = self.rbox.GetString(self.rbox.GetSelection())
 		EditFaculty(self.id,department,image,name,designation,qualification,specialization,email,profile)
-		self.Destroy()
+		self.Close()
 
 	def setImage(self,imgPath):
 		img = wx.Image(imgPath, wx.BITMAP_TYPE_ANY)
@@ -240,7 +241,7 @@ class viewFacultyClass(wx.Dialog):
 		row = self.dataOLV2.GetSelectedObject()
 		editSel = addFacultyClass(None)
 		editSel.basicGUI()
-		editSel.update(row,0)
+		editSel.update(row,1)
 		editSel.ShowModal()
 		self.dataOLV2.SetObjects(readFile('faculty_ece'))
 
@@ -249,7 +250,7 @@ class viewFacultyClass(wx.Dialog):
 		row = self.dataOLV3.GetSelectedObject()
 		editSel = addFacultyClass(None)
 		editSel.basicGUI()
-		editSel.update(row,0)
+		editSel.update(row,2)
 		editSel.ShowModal()
 		self.dataOLV3.SetObjects(readFile('faculty_mae'))
 

@@ -1,5 +1,4 @@
 import json
-from datetime import date
 from shutil import copyfile
 from ntpath import basename
 from os import remove
@@ -12,19 +11,47 @@ CSE_FACULTY_JSON = '/home/stark/Desktop/Faculty_info/cse_faculty.json'
 MAE_FACULTY_JSON = '/home/stark/Desktop/Faculty_info/mae_faculty.json'
 
 
-today = str(date.today())
-def appendNotices(title,path,category):
+def appendNotices(date,title,path,category):
 	FileName = basename(path)
 	FilePath = NOTICE_DIR + FileName
 	copyfile(path,FilePath)
-	new_notice = {"date" : today , "path" : FilePath , "description" : title ,"category" : category}
+	new_notice = {"id" : 99 , "date" : date, "path" : FilePath , "description" : title ,"category" : category}
 	Database = NOTICE_JSON
 	print("Reading : ",Database)
 	with open (Database) as json_file :
 		filedata = json.load(json_file)
+		new_notice["id"] = len(filedata)
 		filedata = [new_notice] + filedata
 		with open (Database,'w') as outfile : 
 			json.dump(filedata, outfile,indent=4)
+
+def EditNotices(id,date,title,path,category):
+	FilePath = path
+	Database = NOTICE_JSON
+	with open (Database) as json_file :
+		filedata = json.load(json_file)
+		if filedata[len(filedata)-id]["id"] == id :
+			index = len(filedata)-id
+		else:
+			for x in range(len(filedata)):
+				if filedata[x]["id"] == id :
+					index = x
+					break
+		#Chcek if previous image and profile are to be removed
+		if filedata[index]["path"] != path :
+			remove(filedata[index]["path"])
+			FilePath = FACULTY_DIR + basename(image)
+			copyfile(path,FilePath)
+		new_notice = {"id" : id, "date" : date, "path" : FilePath , "description" : title ,"category" : category}
+		diffkeys = [k for k in new_notice if filedata[index][k] != new_notice[k]]
+		for k in diffkeys:
+  			print k, ':', filedata[index][k], '->', new_notice[k]
+
+		filedata[index] = new_notice
+		with open (Database,'w') as outfile : 
+			json.dump(filedata, outfile,indent=4)
+			outfile.close()
+		json_file.close()
 
 def appendFaculty(dep,image,name,designation,qualification,specialization,email,profile):
 	ImagePath = FACULTY_DIR + basename(image)
@@ -50,7 +77,8 @@ def appendFaculty(dep,image,name,designation,qualification,specialization,email,
 	
 	#print("Reading : ",Database)
 	with open (Database) as json_file :
-		filedata = json.load(json_file)	
+		filedata = json.load(json_file)
+
 		new_entry["id"] = len(filedata)
 		filedata = filedata + [new_entry]
 		with open (Database,'w') as outfile : 
