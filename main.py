@@ -162,10 +162,10 @@ class NoticeClass(wx.Dialog):
 		
 		
 
-		vbox = wx.BoxSizer(wx.VERTICAL)
+		self.vbox = wx.BoxSizer(wx.VERTICAL)
 		hbox = wx.BoxSizer(wx.HORIZONTAL)
 		hbox1 = wx.BoxSizer(wx.HORIZONTAL)
-
+		self.hbox2 = wx.BoxSizer(wx.HORIZONTAL)
 
 		img = wx.EmptyImage(640,480)
 		self.imageCtrl = wx.StaticBitmap(self.panel, wx.ID_ANY,wx.BitmapFromImage(img))
@@ -181,15 +181,15 @@ class NoticeClass(wx.Dialog):
 		self.DateLbl = wx.StaticText(self.panel,-1,'Date : ') 
 
 
-		vbox.Add(hbox,0,wx.ALL|wx.ALIGN_CENTER)
-		vbox.AddSpacer(5)
-		vbox.Add(self.imageCtrl,0,wx.ALL|wx.ALIGN_CENTRE_HORIZONTAL,5)
-		vbox.AddSpacer(5)
-		vbox.Add(hbox1,0,wx.ALIGN_CENTER,5)
-		vbox.AddSpacer(5)
-		vbox.Add(self.TitleTxt,0,wx.ALL|wx.ALIGN_CENTRE_HORIZONTAL,5)
-		vbox.AddSpacer(5)
-		vbox.Add(self.NoticeBtn,0,wx.ALIGN_CENTER,5)
+		self.vbox.Add(hbox,0,wx.ALL|wx.ALIGN_CENTER)
+		self.vbox.AddSpacer(5)
+		self.vbox.Add(self.imageCtrl,0,wx.ALL|wx.ALIGN_CENTRE_HORIZONTAL,5)
+		self.vbox.AddSpacer(5)
+		self.vbox.Add(hbox1,0,wx.ALIGN_CENTER,5)
+		self.vbox.AddSpacer(5)
+		self.vbox.Add(self.TitleTxt,0,wx.ALL|wx.ALIGN_CENTRE_HORIZONTAL,5)
+		self.vbox.AddSpacer(5)
+		self.vbox.Add(self.hbox2,0,wx.ALIGN_CENTER,5)
 
 		hbox.AddSpacer(5)
 		hbox.Add(wx.StaticText(self.panel,-1,"Select notice file : ",style=wx.ALIGN_CENTER), 0)
@@ -202,7 +202,9 @@ class NoticeClass(wx.Dialog):
 		hbox1.AddSpacer(30)
 		hbox1.Add(self.rbox,0,wx.ALIGN_RIGHT|wx.ALIGN_CENTER,5)
 
-		self.panel.SetSizer(vbox)
+		self.hbox2.Add(self.NoticeBtn,0,wx.ALIGN_CENTER|wx.ALL,5)
+
+		self.panel.SetSizer(self.vbox)
 
 
 	def browseFile(self,e):
@@ -237,6 +239,12 @@ class NoticeClass(wx.Dialog):
 	def update(self,data):
 		self.SetTitle("Edit Notice")
 		self.NoticeBtn.SetLabel("EDIT")
+
+		self.RemoveBtn = wx.Button(self.panel,-1,"Delete")
+		self.Bind(wx.EVT_BUTTON,self.delNotice,self.RemoveBtn)
+
+		self.hbox2.Add(self.RemoveBtn,0,wx.ALL|wx.ALIGN_CENTER,5)
+
 		self.Bind(wx.EVT_BUTTON,self.editNotice,self.NoticeBtn)
 		self.NPath = data["path"]
 		self.NDate = data["date"]
@@ -268,6 +276,15 @@ class NoticeClass(wx.Dialog):
 		date = self.DateTxt.GetValue()
 		EditNotices(self.id,date,title,path,category)
 		self.Destroy()
+
+	def delNotice(self,e):
+		print 'reach delNotice'
+		confirmation = wx.MessageDialog(self,'Are you sure to delete this notice?','Confirmation',wx.YES_NO|wx.NO_DEFAULT|wx.CENTRE|wx.STAY_ON_TOP)
+		answer = confirmation.ShowModal()
+		if answer == wx.ID_YES:
+			DeleteNotice(self.id)
+			self.Destroy()
+
 
 class viewNoticeClass(wx.Dialog):
 	def __init__(self,*args,**kwargs):

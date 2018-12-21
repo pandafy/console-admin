@@ -20,7 +20,7 @@ def appendNotices(date,title,path,category):
 	print("Reading : ",Database)
 	with open (Database) as json_file :
 		filedata = json.load(json_file)
-		new_notice["id"] = len(filedata)
+		new_notice["id"] = filedata[0]["id"] + 1
 		filedata = [new_notice] + filedata
 		with open (Database,'w') as outfile : 
 			json.dump(filedata, outfile,indent=4)
@@ -79,7 +79,7 @@ def appendFaculty(dep,image,name,designation,qualification,specialization,email,
 	with open (Database) as json_file :
 		filedata = json.load(json_file)
 
-		new_entry["id"] = len(filedata)
+		new_entry["id"] = filedata[len(filedata)-1]["id"]
 		filedata = filedata + [new_entry]
 		with open (Database,'w') as outfile : 
 			json.dump(filedata, outfile,indent=4)
@@ -177,3 +177,57 @@ def profileFromJSON(profile):
 	profile = profile[2:]
 	profile = profile[:profile.find("'>")]
 	return profile
+
+def DeleteNotice(id):
+	filepath = NOTICE_JSON
+	
+
+	json_file=	open(Database,'r')
+	try:
+		filedata = json.load(json_file)
+		if filedata[id]["id"] == id :
+			index = id
+		else:
+			for x in range(len(filedata)):
+				if filedata[x]["id"] == id :
+					index = x
+					break
+		del filedata[index]
+	except ValueError :
+		filedata = json_file.read()
+		print json_file.read()
+	json_file.close()
+	json_file=	open(Database,'w')
+	json.dump(filedata,json_file,indent=4)
+
+
+	return filedata
+
+def DeleteFaculty(id,dep):
+	if dep == 0:
+		Database = CSE_FACULTY_JSON
+	elif dep == 2:
+		Database = MAE_FACULTY_JSON
+	elif dep == 1:
+		Database = ECE_FACULTY_JSON
+
+	json_file=	open(Database,'r')
+	try:
+		filedata = json.load(json_file)
+		if filedata[len(filedata)-id-1]["id"] == id :
+			index = len(filedata)-id-1
+		else:
+			for x in range(len(filedata)):
+				if filedata[x]["id"] == id :
+					index = x
+					break
+		del filedata[index]
+	except ValueError :
+		filedata = json_file.read()
+		print json_file.read()
+	json_file.close()
+	json_file=	open(Database,'w')
+	json.dump(filedata,json_file,indent=4)
+
+
+	return filedata

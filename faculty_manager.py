@@ -11,7 +11,7 @@ class addFacultyClass(wx.Dialog):
 		self.panel = wx.Panel(self)
 
 	def basicGUI(self):
-		sizer = wx.GridBagSizer(5,5)
+		self.sizer = wx.GridBagSizer(5,5)
 
 		SName = wx.StaticText(self.panel,-1,"Name : ")
 		self.CName = wx.TextCtrl(self.panel,-1)
@@ -40,28 +40,29 @@ class addFacultyClass(wx.Dialog):
 
 
 
-		sizer.Add(SName,pos = (1,1),flag = wx.ALL|wx.ALIGN_CENTER,border=5)
-		sizer.Add(self.CName,pos = (1,3),span = (1,14),flag = wx.ALL|wx.EXPAND,border=5)
-		sizer.Add(SDesignation,pos = (2,1),flag = wx.ALL|wx.ALIGN_LEFT, border = 5)
-		sizer.Add(self.CDesignation,pos = (2,3),span = (1,14),flag = wx.ALL|wx.EXPAND,border = 5)
-		sizer.Add(SQualification,pos = (3,1),flag = wx.ALL|wx.ALIGN_CENTER, border = 5)
-		sizer.Add(self.CQualification,pos = (3,3),span = (1,14),flag = wx.ALL|wx.EXPAND,border = 5)
-		sizer.Add(SSpecialization,pos = (4,1),flag = wx.ALL|wx.ALIGN_CENTER, border = 5)
-		sizer.Add(self.CSpecialization,pos = (4,3),span = (1,14),flag = wx.ALL|wx.EXPAND,border = 5)
-		sizer.Add(SEmail,pos = (5,1),flag = wx.ALL|wx.ALIGN_CENTER, border = 5)
-		sizer.Add(self.CEmail,pos = (5,3),span = (1,14),flag = wx.ALL|wx.EXPAND,border = 5)
-		sizer.Add(SProfile,pos = (6,1),flag = wx.ALL|wx.ALIGN_RIGHT,border = 5)
-		sizer.Add(self.CProfile,pos = (6,3),span = (1,8) ,flag = wx.ALL|wx.EXPAND,border = 5)
-		sizer.Add(SImage,pos = (1,17),flag = wx.ALL|wx.ALIGN_LEFT, border = 5)
-		sizer.Add(self.CImage,pos = (7,17),span = (1,4),flag = wx.ALL|wx.EXPAND,border = 5)
-		sizer.Add(self.imageCtrl,pos = (2,17),span = (5,5),flag = wx.ALL|wx.EXPAND)
-		sizer.Add(addImgBtn,pos = (1,19),flag = wx.ALIGN_RIGHT)
-		sizer.Add(addProfileBtn,pos = (6,12),span = (1,1),flag = wx.ALIGN_RIGHT|wx.ALIGN_CENTER,border = 5)
-		sizer.Add(self.rbox,pos = (7,1), span = (3,10),flag = wx.ALIGN_LEFT|wx.ALL,border = 5)
-		sizer.Add(self.FacultyBtn,pos = (10,12), flag = wx.ALIGN_CENTER, border = 5)
+		self.sizer.Add(SName,pos = (1,1),flag = wx.ALL|wx.ALIGN_CENTER,border=5)
+		self.sizer.Add(self.CName,pos = (1,3),span = (1,9),flag = wx.ALL|wx.EXPAND,border=5)
+		self.sizer.Add(SDesignation,pos = (2,1),flag = wx.ALL|wx.ALIGN_LEFT, border = 5)
+		self.sizer.Add(self.CDesignation,pos = (2,3),span = (1,9),flag = wx.ALL|wx.EXPAND,border = 5)
+		self.sizer.Add(SQualification,pos = (3,1),flag = wx.ALL|wx.ALIGN_CENTER, border = 5)
+		self.sizer.Add(self.CQualification,pos = (3,3),span = (1,9),flag = wx.ALL|wx.EXPAND,border = 5)
+		self.sizer.Add(SSpecialization,pos = (4,1),flag = wx.ALL|wx.ALIGN_CENTER, border = 5)
+		self.sizer.Add(self.CSpecialization,pos = (4,3),span = (1,9),flag = wx.ALL|wx.EXPAND,border = 5)
+		self.sizer.Add(SEmail,pos = (5,1),flag = wx.ALL|wx.ALIGN_CENTER, border = 5)
+		self.sizer.Add(self.CEmail,pos = (5,3),span = (1,9),flag = wx.ALL|wx.EXPAND,border = 5)
+		self.sizer.Add(SProfile,pos = (6,1),flag = wx.ALL|wx.ALIGN_RIGHT,border = 5)
+		self.sizer.Add(self.CProfile,pos = (6,3),span = (1,8) ,flag = wx.ALL|wx.EXPAND,border = 5)
+		self.sizer.Add(SImage,pos = (1,12),flag = wx.ALL|wx.ALIGN_LEFT, border = 5)
+		self.sizer.Add(self.CImage,pos = (7,12),span = (1,4),flag = wx.ALL|wx.EXPAND,border = 5)
+		self.sizer.Add(self.imageCtrl,pos = (2,12),span = (5,5),flag = wx.ALL|wx.EXPAND)
+		self.sizer.Add(addImgBtn,pos = (1,14),flag = wx.ALIGN_RIGHT)
+		self.sizer.Add(addProfileBtn,pos = (6,11),span = (1,1),flag = wx.ALIGN_RIGHT|wx.ALIGN_CENTER,border = 5)
+		self.sizer.Add(self.rbox,pos = (7,1), span
+		 = (3,10),flag = wx.ALIGN_LEFT|wx.ALL,border = 5)
+		self.sizer.Add(self.FacultyBtn,pos = (10,8),span=(1,1), flag = wx.ALIGN_CENTER, border = 5)
 
 
-		self.panel.SetSizer(sizer)
+		self.panel.SetSizer(self.sizer)
 
 	
 
@@ -107,6 +108,11 @@ class addFacultyClass(wx.Dialog):
 		self.FacultyBtn.SetLabel("EDIT")
 		self.Bind(wx.EVT_BUTTON,self.editFaculty,self.FacultyBtn)
 
+		DeleteBtn = wx.Button(self.panel,wx.ID_ANY,'DELETE')
+		self.Bind(wx.EVT_BUTTON,self.delFaculty,DeleteBtn)
+		self.sizer.Add(DeleteBtn,pos = (10,11),span=(1,1), flag = wx.ALIGN_CENTER|wx.ALL, border = 5)
+
+
 
 	def editFaculty(self,e):
 		print "Editing faculty information \n Changes are : "
@@ -120,7 +126,7 @@ class addFacultyClass(wx.Dialog):
 		profile = self.CProfile.GetValue()
 		department = self.rbox.GetString(self.rbox.GetSelection())
 		EditFaculty(self.id,department,image,name,designation,qualification,specialization,email,profile)
-		self.Close()
+		self.Destroy()
 
 	def setImage(self,imgPath):
 		img = wx.Image(imgPath, wx.BITMAP_TYPE_ANY)
@@ -152,6 +158,16 @@ class addFacultyClass(wx.Dialog):
  		if fileDialog.ShowModal() == wx.ID_CANCEL:
  			return
 		self.CProfile.SetValue(fileDialog.GetPath())
+
+	def delFaculty(self,e):
+		print "Do you want to delete this entry ? : "
+		confirmation = wx.MessageDialog(self,'Are you sure to delete this faculty info?','Confirmation',wx.YES_NO|wx.NO_DEFAULT|wx.CENTRE|wx.STAY_ON_TOP)
+		answer = confirmation.ShowModal()
+		if answer == wx.ID_YES:
+			print "\b Yes"
+			print self.FDep
+			DeleteFaculty(self.id,self.FDep)
+			self.Destroy()
 
 #############################################################################################################
 
@@ -234,7 +250,7 @@ class viewFacultyClass(wx.Dialog):
 		editSel.update(row,0)
 		editSel.ShowModal()
 		self.dataOLV1.SetObjects(readFile('faculty_cse'))
-		
+		editSel.Destroy()
 	
 	def editECE(self,e):
 		print "Opening edit window"
