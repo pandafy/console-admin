@@ -2,6 +2,7 @@
 from util_me import *
 from ObjectListView import ObjectListView, ColumnDefn
 from faculty_manager import *
+from datetime import date
 
 	   	
 
@@ -58,13 +59,13 @@ class windowClass(wx.Frame):
 		noticeButtonAdd = wx.Button(panel,-1,'Add Notice')
 		self.Bind(wx.EVT_BUTTON,self.addNotices,noticeButtonAdd)
 		noticeButtonEdit = wx.Button(panel,-1,'Edit Notices')
-		self.Bind(wx.EVT_BUTTON,self.editNotice,noticeButtonEdit)
+		self.Bind(wx.EVT_BUTTON,self.viewNotice,noticeButtonEdit)
 
 		#Faculty Management Buttons
 		facultyAddBtn = wx.Button(panel,-1,'Add Faculty')
 		self.Bind(wx.EVT_BUTTON,self.addFaculty,facultyAddBtn)
 		facultyEditBtn = wx.Button(panel,-1,'Edit Info')
-		self.Bind(wx.EVT_BUTTON,self.editFaculty,facultyEditBtn)
+		self.Bind(wx.EVT_BUTTON,self.viewFaculty,facultyEditBtn)
 
 
 		#Utility tool Buttons
@@ -115,23 +116,27 @@ class windowClass(wx.Frame):
 	def addNotices(self,e):
 		print "Inside ADD NOTICE"
 		notice = NoticeClass(None,title = 'Notice Manager')
+		notice.basicGUI()
 		notice.ShowModal()
+		notice.add()
 		notice.Destroy()	
 
-	def editNotice(self,e) :
-		print "Editing existing notices."	
-		editNotice = editNoticeClass(None,title = 'Notice Editor')
-		editNotice.ShowModal()
-		editNotice.Destroy()
+	def viewNotice(self,e) :
+		print "View existing notices."	
+		Notice = viewNoticeClass(None,title = 'Notice Editor')
+		Notice.ShowModal()
+		Notice.Destroy()
 
 
 	def addFaculty(self,e):
 		print 'Adding new faculty'
-		Faculty = addFacultyClass(None,title="Add Faculty")
+		Faculty = addFacultyClass(None)
+		Faculty.basicGUI()
+		Faculty.add()
 		Faculty.ShowModal()
 		Faculty.Destroy()
-	def editFaculty(self,e):
-		print 'Editing existing faculty'
+	def viewFaculty(self,e):
+		print 'View existing faculty'
 		Faculty = viewFacultyClass(None,title="Edit Faculty")
 		Faculty.ShowModal()
 		Faculty.Destroy()
@@ -152,44 +157,54 @@ class NoticeClass(wx.Dialog):
 		self.SetSize((720,720))
 		self.PhotoMaxSize = 640
 		self.panel = wx.Panel(self)
-		self.basicGUI()
 
 	def basicGUI(self):
 		
 		
 
-		vbox = wx.BoxSizer(wx.VERTICAL)
+		self.vbox = wx.BoxSizer(wx.VERTICAL)
 		hbox = wx.BoxSizer(wx.HORIZONTAL)
+		hbox1 = wx.BoxSizer(wx.HORIZONTAL)
+		self.hbox2 = wx.BoxSizer(wx.HORIZONTAL)
 
 		img = wx.EmptyImage(640,480)
 		self.imageCtrl = wx.StaticBitmap(self.panel, wx.ID_ANY,wx.BitmapFromImage(img))
-		self.photoTxt = wx.TextCtrl(self.panel, size=(200,-1))
+		self.photoTxt = wx.TextCtrl(self.panel, size=(400,-1))
 		noticeBrowseButton = wx.Button(self.panel,-1,'File...')
 		self.Bind(wx.EVT_BUTTON,self.browseFile,noticeBrowseButton)
 		lblList = ['Examination', 'Scholarship', 'Sports']     
 		self.rbox = wx.RadioBox(self.panel,label = 'Category', choices = lblList ,majorDimension = 1, style = wx.RA_SPECIFY_ROWS)
 		self.TitleTxt = wx.TextCtrl(self.panel, size=(640,-1),value = "Enter notice description here.")
-		AddButton = wx.Button(self.panel,-1,'Add')
-		self.Bind(wx.EVT_BUTTON,self.adNotice,AddButton)
+		self.NoticeBtn = wx.Button(self.panel,-1,'Add')
+		self.Bind(wx.EVT_BUTTON,self.adNotice,self.NoticeBtn)
+		self.DateTxt = wx.TextCtrl(self.panel,-1,size = (150,-1))
+		self.DateLbl = wx.StaticText(self.panel,-1,'Date : ') 
 
 
-		vbox.Add(hbox,0,wx.ALL)
-		vbox.AddSpacer(5)
-		vbox.Add(self.imageCtrl,0,wx.ALL,5)
-		vbox.AddSpacer(5)
-		vbox.Add(self.rbox,0,wx.ALIGN_CENTER,5)
-		vbox.AddSpacer(5)
-		vbox.Add(self.TitleTxt,0,wx.ALL,5)
-		vbox.AddSpacer(5)
-		vbox.Add(AddButton,0,wx.ALIGN_RIGHT,5)
+		self.vbox.Add(hbox,0,wx.ALL|wx.ALIGN_CENTER)
+		self.vbox.AddSpacer(5)
+		self.vbox.Add(self.imageCtrl,0,wx.ALL|wx.ALIGN_CENTRE_HORIZONTAL,5)
+		self.vbox.AddSpacer(5)
+		self.vbox.Add(hbox1,0,wx.ALIGN_CENTER,5)
+		self.vbox.AddSpacer(5)
+		self.vbox.Add(self.TitleTxt,0,wx.ALL|wx.ALIGN_CENTRE_HORIZONTAL,5)
+		self.vbox.AddSpacer(5)
+		self.vbox.Add(self.hbox2,0,wx.ALIGN_CENTER,5)
 
 		hbox.AddSpacer(5)
-		hbox.Add(wx.StaticText(self.panel,-1,"Select notice file : ",style=wx.ALIGN_CENTRE_HORIZONTAL|wx.ST_NO_AUTORESIZE), 0)
-		hbox.Add(self.photoTxt, 3, wx.ALL, 5)	
-		hbox.Add(noticeBrowseButton, 0, wx.ALIGN_RIGHT,5)
+		hbox.Add(wx.StaticText(self.panel,-1,"Select notice file : ",style=wx.ALIGN_CENTER), 0)
+		hbox.Add(self.photoTxt, 5, wx.ALL, 5)	
+		hbox.Add(noticeBrowseButton, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER,5)
 		hbox.AddSpacer(5,0,0)
 
-		self.panel.SetSizer(vbox)
+		hbox1.Add(self.DateLbl,0,wx.ALIGN_CENTER|wx.ALL,5)
+		hbox1.Add(self.DateTxt,7,wx.ALIGN_CENTER | wx.ALL,5)
+		hbox1.AddSpacer(30)
+		hbox1.Add(self.rbox,0,wx.ALIGN_RIGHT|wx.ALIGN_CENTER,5)
+
+		self.hbox2.Add(self.NoticeBtn,0,wx.ALIGN_CENTER|wx.ALL,5)
+
+		self.panel.SetSizer(self.vbox)
 
 
 	def browseFile(self,e):
@@ -216,35 +231,94 @@ class NoticeClass(wx.Dialog):
 		img = img.Scale(NewW,NewH)
 		self.imageCtrl.SetBitmap(wx.BitmapFromImage(img))
 
+	def add(self):
+		self.Bind(wx.EVT_BUTTON,self.adNotice,self.NoticeBtn)
+		self.Date = str(date.today)
+		self.DateTxt.SetValue(self.Date)
+
+	def update(self,data):
+		self.SetTitle("Edit Notice")
+		self.NoticeBtn.SetLabel("EDIT")
+
+		self.RemoveBtn = wx.Button(self.panel,-1,"Delete")
+		self.Bind(wx.EVT_BUTTON,self.delNotice,self.RemoveBtn)
+
+		self.hbox2.Add(self.RemoveBtn,0,wx.ALL|wx.ALIGN_CENTER,5)
+
+		self.Bind(wx.EVT_BUTTON,self.editNotice,self.NoticeBtn)
+		self.NPath = data["path"]
+		self.NDate = data["date"]
+		self.NDesc = data["description"]
+		self.NCatg = ['Examination', 'Scholarship', 'Sports'].index(data["category"])
+		self.id    = data["id"]
+
+		self.onView(self.NPath)
+
+		self.photoTxt.SetValue(self.NPath)
+		self.TitleTxt.SetValue(self.NDesc)
+		self.rbox.SetSelection(self.NCatg)
+		self.DateTxt.SetValue(self.NDate)
+
+
 	def adNotice(self,e):
 		title = self.TitleTxt.GetValue()
 		path = self.photoTxt.GetValue()
 		category = self.rbox.GetString(self.rbox.GetSelection())
+		date = self.DateTxt.GetValue()
 
-		appendNotices(title,path,category)
+		appendNotices(date,title,path,category)
 		self.Destroy()
 
-class editNoticeClass(wx.Dialog):
+	def editNotice(self,e):
+		title = self.TitleTxt.GetValue()
+		path = self.photoTxt.GetValue()
+		category = self.rbox.GetString(self.rbox.GetSelection())
+		date = self.DateTxt.GetValue()
+		EditNotices(self.id,date,title,path,category)
+		self.Destroy()
+
+	def delNotice(self,e):
+		print 'reach delNotice'
+		confirmation = wx.MessageDialog(self,'Are you sure to delete this notice?','Confirmation',wx.YES_NO|wx.NO_DEFAULT|wx.CENTRE|wx.STAY_ON_TOP)
+		answer = confirmation.ShowModal()
+		if answer == wx.ID_YES:
+			DeleteNotice(self.id)
+			self.Destroy()
+
+
+class viewNoticeClass(wx.Dialog):
 	def __init__(self,*args,**kwargs):
-		super(editNoticeClass,self).__init__(*args,**kwargs)
+		super(viewNoticeClass,self).__init__(*args,**kwargs)
 		#self.SetTitle("Notice Editor")
 		self.SetSize((720,720))
 		self.panel = wx.Panel(self)
-		self.msg = "hey there"
 		self.dataOLV = ObjectListView(self,-1,style =wx.LC_REPORT)
-		self.basicGUI(self.dataOLV)
+		self.basicGUI()
 
-	def basicGUI(self,obj):
-		print self.msg
-		mainSizer = wx.BoxSizer(wx.VERTICAL)        
- 
-		mainSizer.Add(self.dataOLV, 1, wx.ALL|wx.EXPAND, 5)
+	def basicGUI(self):
+		mainSizer = wx.BoxSizer(wx.VERTICAL)     
+
+		editNoticeBtn = wx.Button(self,-1,"EDIT")
+		self.Bind(wx.EVT_BUTTON,self.edit,editNoticeBtn)
+
+ 		mainSizer.Add(editNoticeBtn,0,wx.ALL|wx.ALIGN_CENTER,20)
+		mainSizer.Add(self.dataOLV, 1, wx.ALL|wx.EXPAND, 20)
 		
 		self.SetSizer(mainSizer)
 		data = readFile('notice')
 		self.dataOLV.SetColumns([ColumnDefn("date", "left", 100, "date"),ColumnDefn("path","left",220,"path"),ColumnDefn("Title","left",100,"description"),ColumnDefn("Category","left",100,"category"),ColumnDefn("Remove","left",50,"")])
 		
 		self.dataOLV.SetObjects(data)
+
+	def edit(self,e):
+		print "Openig Notice Edit Window"
+		row = self.dataOLV.GetSelectedObject()
+		Notice = NoticeClass(None)
+		Notice.basicGUI()
+		Notice.update(row)
+		Notice.ShowModal()
+		Notice.Destroy()
+		self.dataOLV.SetObjects(readFile('notice'))
 
 
 
