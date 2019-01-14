@@ -1,9 +1,12 @@
 
+
+
 from util_me import *
 from ObjectListView import ObjectListView, ColumnDefn
 from faculty_manager import *
 from datetime import date
-
+import stage
+import commit
 	   	
 
 
@@ -71,6 +74,8 @@ class windowClass(wx.Frame):
 		#Utility tool Buttons
 		stageButton = wx.Button(panel,-1,'Stage')
 		self.Bind(wx.EVT_BUTTON,self.stage,stageButton)
+		commitButton = wx.Button(panel,-1,'Commit')
+		self.Bind(wx.EVT_BUTTON,self.commit,commitButton)
 
 
 
@@ -88,10 +93,15 @@ class windowClass(wx.Frame):
 		FacultySizer = wx.StaticBoxSizer(Faculty,wx.HORIZONTAL)
 		FacultyBox = wx.BoxSizer(wx.HORIZONTAL)
 
+		Utility = wx.StaticBox(panel,-1, 'Utility functions')
+		UtilitySizer = wx.StaticBoxSizer(Utility,wx.HORIZONTAL)
+		UtilityBox = wx.BoxSizer(wx.HORIZONTAL)
+
 		panel.SetSizer(vbox)
 
 		vbox.Add(NoticeSizer,0,wx.ALL|wx.CENTER|wx.EXPAND,20)
 		vbox.Add(FacultySizer,0,wx.ALL|wx.CENTER|wx.EXPAND,20)
+		vbox.Add(UtilitySizer,0,wx.ALL|wx.CENTER|wx.EXPAND,20)
 
 		NoticeSizer.Add(NoticeBox,0,wx.ALL,5)
 		NoticeBox.Add(noticeButtonAdd, 2, wx.ALL,border = 5)
@@ -100,6 +110,10 @@ class windowClass(wx.Frame):
 		FacultySizer.Add(FacultyBox,0,wx.CENTER|wx.ALL,5)
 		FacultyBox.Add(facultyAddBtn,2,wx.ALL,border=5)
 		FacultyBox.Add(facultyEditBtn,2,wx.ALL,border=5)
+
+		UtilitySizer.Add(UtilityBox,0,wx.CENTER|wx.ALL,5)
+		UtilityBox.Add(stageButton,2,wx.ALL,border=5)
+		UtilityBox.Add(commitButton,2,wx.ALL,border=5)
 		
 
 
@@ -108,7 +122,6 @@ class windowClass(wx.Frame):
 		
 		#hbox.AddSpacer(5,0,0)
 
-		vbox.Add(stageButton, 0, wx.ALL,border = 5)
 
 
 	
@@ -143,7 +156,13 @@ class windowClass(wx.Frame):
 
 
 	def stage(slef,e):
-		print "Yo"
+		print "Clicked on stage button\n Handing over to stage.py"
+		Stage = stage.stageViewClass(None)
+		Stage.ShowModal()
+		Stage.Destroy()
+		
+	def commit(self,e):
+		Commit = commit.commit()
 
 	def Quit(self, e):
 		self.Close()
