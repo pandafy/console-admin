@@ -3,8 +3,10 @@ import os
 import ftplib
 import geet
 
-host = '10.0.0.4'
-port = '2121'
+from config import SERVER_HOST, PORT
+
+host = SERVER_HOST
+poer = PORT
 
 class commit():
 	def __init__(self,*args,**kwargs):

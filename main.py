@@ -1,6 +1,4 @@
 
-
-
 from util_me import *
 from ObjectListView import ObjectListView, ColumnDefn
 from faculty_manager import *
@@ -214,7 +212,7 @@ class NoticeClass(wx.Dialog):
 		hbox.Add(wx.StaticText(self.panel,-1,"Select notice file : ",style=wx.ALIGN_CENTER), 0)
 		hbox.Add(self.photoTxt, 5, wx.ALL, 5)	
 		hbox.Add(noticeBrowseButton, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER,5)
-		hbox.AddSpacer(5,0,0)
+		hbox.AddSpacer(5)
 
 		hbox1.Add(self.DateLbl,0,wx.ALIGN_CENTER|wx.ALL,5)
 		hbox1.Add(self.DateTxt,7,wx.ALIGN_CENTER | wx.ALL,5)

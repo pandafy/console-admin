@@ -3,12 +3,7 @@ from shutil import copyfile
 from ntpath import basename
 from os import remove
 
-NOTICE_JSON = '/home/stark/Desktop/Notices/data.json'
-FACULTY_DIR = '/home/stark/Desktop/Faculty_info/' 
-NOTICE_DIR = '/home/stark/Desktop/Notices/'
-ECE_FACULTY_JSON = '/home/stark/Desktop/Faculty_info/ece_faculty.json'
-CSE_FACULTY_JSON = '/home/stark/Desktop/Faculty_info/cse_faculty.json'
-MAE_FACULTY_JSON = '/home/stark/Desktop/Faculty_info/mae_faculty.json'
+from config import NOTICE_JSON, FACULTY_DIR,NOTICE_DIR, ECE_FACULTY_JSON,CSE_FACULTY_JSON, MAE_FACULTY_JSON
 
 
 def appendNotices(date,title,path,category):
