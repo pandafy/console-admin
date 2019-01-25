@@ -1,21 +1,21 @@
 
 print('Initiating geet')
 import os
-from os import listdir,path,walk
+from os import listdir,walk
 from time import ctime 
 import json
 import shutil
 
-pathJoin=os.path.join
+from config import GEET_DATABASE, PROJECT_DIR, pathJoin
+
 
 #################################################################
 #			USER DEFINED CONSTANTS
 #################################################################
 
-database = '/home/stark/Desktop/JSON DATA/Geet_files/'
-workingDir = '/home/stark/Desktop/college'
+database = GEET_DATABASE
+workingDir = PROJECT_DIR
 lstrip_path = workingDir.rstrip(os.path.basename(workingDir))
-
 #################################################################
 
 
@@ -179,7 +179,11 @@ def main():
 	except IOError,e :
 		print str(e)
 		print 'Running geet.py for fist time'
-		index(database,workingDir)
+		for x in os.listdir(workingDir):
+			with open(pathJoin(database,x+'.json'),'w') as outfile:
+				json.dump([],outfile,indent=4)
+				outfile.close()
+		
 
 
 	#deleting temporary files
